@@ -5,10 +5,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ToDo App</title>
+    <link rel="stylesheet" href="./Style/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css"
+    />
   </head>
-  <body>
-    <h1>
-      Welcome to ToDo App, Please login / register to access your ToDo List
-    </h1>
+  <body class="min-height-100 d-flex flex-column">
+    <header>
+      <nav class="navbar bg-light">
+        <div class="container">
+          <a href="#" class="navbar-brand">ToDo App</a>
+          <div>
+            <button class="btn btn-primary">Login</button>
+            <button class="btn btn-secondary">Register</button>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main class="flex-grow-1 container p-md-5">
+      <h3 class="mt-5">
+        Welcome to ToDo App, Please login / register to access your ToDo List
+      </h3>
+    </main>
+    <footer>
+      <nav class="navbar bg-dark text-white d-felx justify-content-center">
+        <p class="text-center">
+          Made with <i class="bi bi-heart-fill"></i> by Mohamed Okasha
+        </p>
+      </nav>
+    </footer>
   </body>
 </html>
