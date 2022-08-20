@@ -1,9 +1,36 @@
+const REQRES_BASE_URL = "https://reqres.in/api";
+const loginStatus = document.querySelector("#loginStatus");
+
 function handleRegisterationSubmit() {
   const form = document.forms;
   const emailInput = form[0]["inputEmail1"];
   const passwordInput = form[0]["inputPassword1"];
 
   const errors = validateForm(emailInput, passwordInput);
+
+  if (!Object.keys(errors).length) {
+    axios
+      .post(`${REQRES_BASE_URL}/register`, {
+        email: emailInput.value,
+        password: passwordInput.value,
+      })
+      .then((res) => {
+        setCookie("email", emailInput.value);
+        setCookie("token", res.data.token);
+        loginStatus.innerHTML = `<p>Welcome, ${emailInput.value.slice(
+          0,
+          emailInput.value.indexOf("@")
+        )}</p>
+            <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="handleLogout()"
+            >
+            Logout
+            </button>
+            `;
+      });
+  }
 }
 
 function validateForm(emailInput, passwordInput) {
@@ -16,7 +43,6 @@ function validateForm(emailInput, passwordInput) {
   if (!emailRegex.test(emailInput.value)) {
     emailInput.classList.add("invalid");
     errors.email = "invalid";
-    console.log("Enter a vaid email");
   } else {
     emailInput.classList.remove("invalid");
     if (errors.email) delete errors.email;
@@ -24,11 +50,14 @@ function validateForm(emailInput, passwordInput) {
   if (!passwordRegex.test(passwordInput.value)) {
     passwordInput.classList.add("invalid");
     errors.password = "invalid";
-    console.log(passwordInput.value, "Enter a valid password");
   } else {
     passwordInput.classList.remove("invalid");
     if (errors.password) delete errors.password;
   }
 
   return errors;
+}
+
+function setCookie(key, val) {
+  document.cookie = `${key}=${val}`;
 }

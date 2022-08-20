@@ -11785,4 +11785,8 @@ textarea.form-control-lg {
   border: 1px solid red;
 }
 
+#loginStatus button:last-child {
+  margin-left: 10px;
+}
+
 /*# sourceMappingURL=style.css.map */
