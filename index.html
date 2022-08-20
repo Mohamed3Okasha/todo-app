@@ -55,17 +55,12 @@
               ></button>
             </div>
             <div class="modal-body">
-              <form>
+              <form onsubmit="return false;">
                 <div class="mb-3">
                   <label for="inputEmail1" class="form-label"
                     >Email address</label
                   >
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="inputEmail1"
-                    aria-describedby="emailHelp"
-                  />
+                  <input type="email" class="form-control" id="inputEmail1" />
                 </div>
                 <div class="mb-3">
                   <label for="inputPassword1" class="form-label"
@@ -76,9 +71,19 @@
                     class="form-control"
                     id="inputPassword1"
                   />
+                  <span style="font-size: small"
+                    >At least 8 chars: must have one letter & one special
+                    character</span
+                  >
                 </div>
 
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  onclick="handleRegisterationSubmit()"
+                >
+                  Submit
+                </button>
               </form>
             </div>
           </div>
@@ -93,5 +98,7 @@
       </nav>
     </footer>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <script src="./Script/app.js"></script>
   </body>
 </html>

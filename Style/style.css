@@ -11781,4 +11781,8 @@ textarea.form-control-lg {
   min-height: 100vh;
 }
 
+.invalid {
+  border: 1px solid red;
+}
+
 /*# sourceMappingURL=style.css.map */
