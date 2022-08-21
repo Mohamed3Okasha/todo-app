@@ -20,7 +20,7 @@ function handleRegisterationSubmit() {
         setCookie("email", emailInput.value);
         setCookie("token", res.data.token);
         changeLoginStatus(emailInput.value);
-        modalCloseBtn.click()
+        modalCloseBtn.click();
       });
   }
 }
@@ -63,6 +63,13 @@ function changeLoginStatus(email){
       Logout
       </button>
       `;
+
+  showTodoList();
+}
+
+function showTodoList(){
+  const todoContent = document.querySelector(".todo-content");
+  todoContent.innerHTML = `Here's your todo content`
 }
 
 function setCookie(key, val) {
