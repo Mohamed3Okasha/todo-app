@@ -1,6 +1,8 @@
 const REQRES_BASE_URL = "https://reqres.in/api";
+const JSONPH_BASE_URL = "https://jsonplaceholder.typicode.com";
 const loginStatus = document.querySelector("#loginStatus");
-const modalCloseBtn = document.querySelector(".btn-close")
+const modalCloseBtn = document.querySelector(".btn-close");
+const todoContent = document.querySelector(".todo-content");
 
 function handleRegisterationSubmit() {
   const form = document.forms;
@@ -120,8 +122,18 @@ function changeLoginStatus(email){
 })()
 
 function showTodoList(){
-  const todoContent = document.querySelector(".todo-content");
-  todoContent.innerHTML = `Here's your todo content`;
+  // todoContent.innerHTML = `Here's your todo content`;
+  todoContent.querySelector("h3").classList.add("d-none");
+  todoContent.querySelector(".wrapper").classList.remove("d-none")
+  const todosData = getTodosDataLocalStorage();
+ 
+  todosData.forEach(todo => {
+    let todoItem = document.createElement("div");
+    todoItem.innerHTML = `
+    <li class="list-group-item ${todo.completed?"text-decoration-line-through": ""}">${todo.title} <input type="checkbox" ${todo.completed?"checked":""}></li>
+    `;
+    todoContent.querySelector('.list-group').append(todoItem);
+})
 }
 
 function removeTodoList(){
@@ -133,7 +145,7 @@ function removeTodoList(){
 
 function getTodosDataAPI(){
   axios.get(`${JSONPH_BASE_URL}/todos`)
-  .then(res => {localStorage.setItem("todosData", JSON.stringify(res.data)); console.log('here', res.data)})
+  .then(res => {localStorage.setItem("todosData", JSON.stringify(res.data));})
 }
 
 function getTodosDataLocalStorage(){
