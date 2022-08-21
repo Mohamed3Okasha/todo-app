@@ -48,6 +48,27 @@ function handleLoginSubmit(){
   }
 }
 
+function handleLogout() {
+  const arrCookies = arrangedCookies();
+  for (let cookie in arrCookies) {
+    this.deleteCookie(cookie);
+  }
+
+  loginStatus.innerHTML = `
+  <button class="btn btn-primary">Login</button>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    data-bs-toggle="modal"
+    data-bs-target="#registerModal"
+  >
+    Register
+  </button>
+    `;
+
+  removeTodoList();
+}
+
 function validateForm(emailInput, passwordInput) {
   const errors = {};
   const emailRegex = /^\w+([\.-]?\w+)*@\w+[^.]([\-]?\w+)*(\.\w{2,})+$/;
@@ -92,9 +113,33 @@ function changeLoginStatus(email){
 
 function showTodoList(){
   const todoContent = document.querySelector(".todo-content");
-  todoContent.innerHTML = `Here's your todo content`
+  todoContent.innerHTML = `Here's your todo content`;
+}
+
+function removeTodoList(){
+  const todoContent = document.querySelector(".todo-content");
+  todoContent.innerHTML = `<h3 class="mt-5">
+  Welcome to ToDo App, Please login / register to access your ToDo List
+  </h3>`;
 }
 
 function setCookie(key, val) {
   document.cookie = `${key}=${val}`;
+}
+
+function deleteCookie(key) {
+  let date = new Date();
+  date.setDate(date.getDate() - 1);
+  document.cookie = `${key}='';expires=${date.toGMTString()}`;
+}
+
+function arrangedCookies() {
+  let cookiesArr = [];
+  let cookiesData = document.cookie.split(";");
+  for (let i = 0; i < cookiesData.length; i++) {
+    cookiesArr[cookiesData[i].trim().split("=")[0]] = cookiesData[i]
+      .trim()
+      .split("=")[1];
+  }
+  return cookiesArr;
 }
