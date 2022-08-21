@@ -11789,4 +11789,8 @@ textarea.form-control-lg {
   margin-left: 10px;
 }
 
+.active {
+  color: blue;
+}
+
 /*# sourceMappingURL=style.css.map */
