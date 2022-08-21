@@ -21,6 +21,7 @@ function handleRegisterationSubmit() {
         setCookie("token", res.data.token);
         changeLoginStatus(emailInput.value);
         modalCloseBtn.click();
+        getTodosDataAPI(); //load todos upon successful registeration of the user
       });
   }
 }
@@ -128,6 +129,15 @@ function removeTodoList(){
   todoContent.innerHTML = `<h3 class="mt-5">
   Welcome to ToDo App, Please login / register to access your ToDo List
   </h3>`;
+}
+
+function getTodosDataAPI(){
+  axios.get(`${JSONPH_BASE_URL}/todos`)
+  .then(res => {localStorage.setItem("todosData", JSON.stringify(res.data)); console.log('here', res.data)})
+}
+
+function getTodosDataLocalStorage(){
+  return JSON.parse(localStorage.getItem("todosData"));
 }
 
 function setCookie(key, val) {
