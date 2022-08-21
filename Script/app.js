@@ -17,18 +17,7 @@ function handleRegisterationSubmit() {
       .then((res) => {
         setCookie("email", emailInput.value);
         setCookie("token", res.data.token);
-        loginStatus.innerHTML = `<p>Welcome, ${emailInput.value.slice(
-          0,
-          emailInput.value.indexOf("@")
-        )}</p>
-            <button
-            type="button"
-            class="btn btn-secondary"
-            onclick="handleLogout()"
-            >
-            Logout
-            </button>
-            `;
+        changeLoginStatus(emailInput.value);
       });
   }
 }
@@ -56,6 +45,21 @@ function validateForm(emailInput, passwordInput) {
   }
 
   return errors;
+}
+
+function changeLoginStatus(email){
+  loginStatus.innerHTML = `<p>Welcome, ${email.slice(
+    0,
+    email.indexOf("@")
+  )}</p>
+      <button
+      type="button"
+      class="btn btn-secondary"
+      onclick="handleLogout()"
+      >
+      Logout
+      </button>
+      `;
 }
 
 function setCookie(key, val) {
