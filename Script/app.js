@@ -111,6 +111,13 @@ function changeLoginStatus(email){
   showTodoList();
 }
 
+(function checkLoginStatus(){
+  const arrCookies = arrangedCookies();
+  if(arrCookies.email && arrCookies.token){
+    changeLoginStatus(arrCookies.email);
+  }
+})()
+
 function showTodoList(){
   const todoContent = document.querySelector(".todo-content");
   todoContent.innerHTML = `Here's your todo content`;
