@@ -98,3 +98,20 @@ function showTodoList(){
 function setCookie(key, val) {
   document.cookie = `${key}=${val}`;
 }
+
+function deleteCookie(key) {
+  let date = new Date();
+  date.setDate(date.getDate() - 1);
+  document.cookie = `${key}='';expires=${date.toGMTString()}`;
+}
+
+function arrangedCookies() {
+  let cookiesArr = [];
+  let cookiesData = document.cookie.split(";");
+  for (let i = 0; i < cookiesData.length; i++) {
+    cookiesArr[cookiesData[i].trim().split("=")[0]] = cookiesData[i]
+      .trim()
+      .split("=")[1];
+  }
+  return cookiesArr;
+}
