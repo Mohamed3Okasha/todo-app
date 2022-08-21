@@ -25,6 +25,29 @@ function handleRegisterationSubmit() {
   }
 }
 
+function handleLoginSubmit(){
+  const form = document.forms;
+  const emailInput = form[1]["inputEmail2"];
+  const passwordInput = form[1]["inputPassword2"];
+  const modalCloseBtn = document.querySelector("#login-btn-close")
+
+  const errors = validateForm(emailInput, passwordInput);
+
+  if (!Object.keys(errors).length) {
+    axios
+      .post(`${REQRES_BASE_URL}/login`, {
+        email: emailInput.value,
+        password: passwordInput.value,
+      })
+      .then((res) => {
+        setCookie("email", emailInput.value);
+        setCookie("token", res.data.token);
+        changeLoginStatus(emailInput.value);
+        modalCloseBtn.click();
+      });
+  }
+}
+
 function validateForm(emailInput, passwordInput) {
   const errors = {};
   const emailRegex = /^\w+([\.-]?\w+)*@\w+[^.]([\-]?\w+)*(\.\w{2,})+$/;
