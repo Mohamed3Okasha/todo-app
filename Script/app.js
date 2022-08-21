@@ -3,6 +3,7 @@ const JSONPH_BASE_URL = "https://jsonplaceholder.typicode.com";
 const loginStatus = document.querySelector("#loginStatus");
 const modalCloseBtn = document.querySelector(".btn-close");
 const todoContent = document.querySelector(".todo-content");
+const filters = document.querySelectorAll(".filters span");
 
 function handleRegisterationSubmit() {
   const form = document.forms;
@@ -121,19 +122,47 @@ function changeLoginStatus(email){
   }
 })()
 
-function showTodoList(){
+function showTodoList(filterId){
   // todoContent.innerHTML = `Here's your todo content`;
   todoContent.querySelector("h3").classList.add("d-none");
   todoContent.querySelector(".wrapper").classList.remove("d-none")
   const todosData = getTodosDataLocalStorage();
- 
+  const todosUl = todoContent.querySelector('.list-group');
+    if(filterId === "completed"){
+      todosUl.innerHTML="";
   todosData.forEach(todo => {
-    let todoItem = document.createElement("div");
-    todoItem.innerHTML = `
-    <li class="list-group-item ${todo.completed?"text-decoration-line-through": ""}">${todo.title} <input type="checkbox" ${todo.completed?"checked":""}></li>
-    `;
-    todoContent.querySelector('.list-group').append(todoItem);
-})
+    if(todo.completed){
+      let todoItem = document.createElement("li");
+      todoItem.classList.add("list-group-item","text-decoration-line-through");
+      todoItem.innerHTML = `${todo.title} <input type="checkbox" checked>`;
+      todosUl.append(todoItem);
+    }
+    })
+    }
+    else if(filterId === "pending"){
+      todosUl.innerHTML="";
+      todosData.forEach(todo => {
+        if(!todo.completed){
+        let todoItem = document.createElement("li");
+        todoItem.classList.add("list-group-item");
+        todoItem.innerHTML = `${todo.title} <input type="checkbox">`;
+        todosUl.append(todoItem);
+      }
+      })
+    }
+    else{
+      todosUl.innerHTML="";
+      todosData.forEach(todo => {
+        let todoItem = document.createElement("li");
+        todoItem.classList.add("list-group-item", `${todo.completed && "text-decoration-line-through"}`);
+        todoItem.innerHTML = `${todo.title} <input type="checkbox" ${todo.completed?"checked":""}>`;
+        todosUl.append(todoItem);
+      })
+    }
+    
+    if(!filterId){
+      addFiltersEventListeners();
+    }
 }
 
 function removeTodoList(){
@@ -150,6 +179,16 @@ function getTodosDataAPI(){
 
 function getTodosDataLocalStorage(){
   return JSON.parse(localStorage.getItem("todosData"));
+}
+
+function addFiltersEventListeners(){
+  filters.forEach(filter => {
+    filter.addEventListener("click", () => {
+      document.querySelector("span.active").classList.remove("active");
+      filter.classList.add("active");
+      showTodoList(filter.id);
+    })
+  })
 }
 
 function setCookie(key, val) {
