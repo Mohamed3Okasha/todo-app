@@ -16,17 +16,81 @@
       <nav class="navbar bg-light">
         <div class="container">
           <a href="#" class="navbar-brand">ToDo App</a>
-          <div>
+          <div id="loginStatus" class="d-flex">
             <button class="btn btn-primary">Login</button>
-            <button class="btn btn-secondary">Register</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-toggle="modal"
+              data-bs-target="#registerModal"
+            >
+              Register
+            </button>
           </div>
         </div>
       </nav>
     </header>
     <main class="flex-grow-1 container p-md-5">
-      <h3 class="mt-5">
-        Welcome to ToDo App, Please login / register to access your ToDo List
-      </h3>
+      <div class="todo-content">
+        <h3 class="mt-5">
+          Welcome to ToDo App, Please login / register to access your ToDo List
+        </h3>
+      </div>
+      <div
+        class="modal fade"
+        id="registerModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                Reigsteration Form
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form onsubmit="return false;">
+                <div class="mb-3">
+                  <label for="inputEmail1" class="form-label"
+                    >Email address</label
+                  >
+                  <input type="email" class="form-control" id="inputEmail1" />
+                </div>
+                <div class="mb-3">
+                  <label for="inputPassword1" class="form-label"
+                    >Password</label
+                  >
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="inputPassword1"
+                  />
+                  <span style="font-size: small"
+                    >At least 8 chars: must have one letter & one special
+                    character</span
+                  >
+                </div>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  onclick="handleRegisterationSubmit()"
+                >
+                  Submit
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
     <footer>
       <nav class="navbar bg-dark text-white d-felx justify-content-center">
@@ -35,5 +99,8 @@
         </p>
       </nav>
     </footer>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <script src="./Script/app.js"></script>
   </body>
 </html>
