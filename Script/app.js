@@ -1,10 +1,12 @@
 const REQRES_BASE_URL = "https://reqres.in/api";
 const loginStatus = document.querySelector("#loginStatus");
+const modalCloseBtn = document.querySelector(".btn-close")
 
 function handleRegisterationSubmit() {
   const form = document.forms;
   const emailInput = form[0]["inputEmail1"];
   const passwordInput = form[0]["inputPassword1"];
+  const modalCloseBtn = document.querySelector(".btn-close")
 
   const errors = validateForm(emailInput, passwordInput);
 
@@ -18,6 +20,7 @@ function handleRegisterationSubmit() {
         setCookie("email", emailInput.value);
         setCookie("token", res.data.token);
         changeLoginStatus(emailInput.value);
+        modalCloseBtn.click()
       });
   }
 }
