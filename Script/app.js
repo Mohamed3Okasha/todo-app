@@ -22,9 +22,9 @@ function handleRegisterationSubmit() {
       .then((res) => {
         setCookie("email", emailInput.value);
         setCookie("token", res.data.token);
+        getTodosDataAPI(); //load todos upon successful registeration of the user
         changeLoginStatus(emailInput.value);
         modalCloseBtn.click();
-        getTodosDataAPI(); //load todos upon successful registeration of the user
       });
   }
 }
@@ -174,7 +174,7 @@ function removeTodoList(){
 
 function getTodosDataAPI(){
   axios.get(`${JSONPH_BASE_URL}/todos`)
-  .then(res => {localStorage.setItem("todosData", JSON.stringify(res.data));})
+  .then(res => {localStorage.setItem("todosData", JSON.stringify(res.data.filter(todo => todo.userId === 1)));})
 }
 
 function getTodosDataLocalStorage(){
