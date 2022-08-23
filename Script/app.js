@@ -4,6 +4,7 @@ const loginStatus = document.querySelector("#loginStatus");
 const modalCloseBtn = document.querySelector(".btn-close");
 const todoContent = document.querySelector(".todo-content");
 const filters = document.querySelectorAll(".filters span");
+let editTaskId = 0;
 
 function handleRegisterationSubmit() {
   const form = document.forms;
@@ -128,13 +129,16 @@ function showTodoList(filterId){
   todoContent.querySelector(".wrapper").classList.remove("d-none")
   const todosData = getTodosDataLocalStorage();
   const todosUl = todoContent.querySelector('.list-group');
-    if(filterId === "completed"){
-      todosUl.innerHTML="";
+  if(todosData?.length){
+  if(filterId === "completed"){
+    todosUl.innerHTML="";
   todosData.forEach(todo => {
     if(todo.completed){
       let todoItem = document.createElement("li");
-      todoItem.classList.add("list-group-item","text-decoration-line-through");
-      todoItem.innerHTML = `${todo.title} <input type="checkbox" checked>`;
+      todoItem.setAttribute("id", `${todo.id}`);
+      todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
+      todoItem.innerHTML = `<div><span class="text-decoration-line-through">${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox" checked></div> <div><button class="btn btn-dark btn-sm" onclick="editTodo(this)">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
+
       todosUl.append(todoItem);
     }
     })
@@ -144,8 +148,9 @@ function showTodoList(filterId){
       todosData.forEach(todo => {
         if(!todo.completed){
         let todoItem = document.createElement("li");
-        todoItem.classList.add("list-group-item");
-        todoItem.innerHTML = `${todo.title} <input type="checkbox">`;
+        todoItem.setAttribute("id", todo.id);
+        todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
+        todoItem.innerHTML = `<div><span>${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox"></div> <div><button class="btn btn-dark btn-sm" onclick="editTodo(this)">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
         todosUl.append(todoItem);
       }
       })
@@ -154,11 +159,14 @@ function showTodoList(filterId){
       todosUl.innerHTML="";
       todosData.forEach(todo => {
         let todoItem = document.createElement("li");
-        todoItem.classList.add("list-group-item", `${todo.completed && "text-decoration-line-through"}`);
-        todoItem.innerHTML = `${todo.title} <input type="checkbox" ${todo.completed?"checked":""}>`;
+        todoItem.setAttribute("id", todo.id);
+        todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
+        todoItem.innerHTML = `<div><span class=${todo.completed ? "text-decoration-line-through" : ""}>${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox" ${todo.completed?"checked":""}></div> <div><button class="btn btn-dark btn-sm" onclick="editTodo(this)">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
         todosUl.append(todoItem);
       })
     }
+
+  }
     
     if(!filterId){
       addFiltersEventListeners();
@@ -189,6 +197,64 @@ function addFiltersEventListeners(){
       showTodoList(filter.id);
     })
   })
+}
+
+function toggleCheck(targetTaskInput){
+  let todosDataLocal = getTodosDataLocalStorage();
+  let targetTaskLocal = todosDataLocal.find(todo => todo.id === +targetTaskInput.id);
+  let targetTaskContent = targetTaskInput.parentElement.firstElementChild;
+  targetTaskLocal.completed ? targetTaskContent.classList.remove("text-decoration-line-through") : targetTaskContent.classList.add("text-decoration-line-through");
+  targetTaskLocal.completed = ! targetTaskLocal.completed;
+  localStorage.setItem("todosData", JSON.stringify(todosDataLocal));
+}
+
+function removeTodo(removeTodo){
+  let targetTodoItem = removeTodo.parentElement.parentElement;
+  localStorage.setItem("todosData", JSON.stringify(getTodosDataLocalStorage().filter(todo => todo.id !== +targetTodoItem.id)))
+  targetTodoItem.remove();
+}
+
+function editTodo(editTodoBtn){
+  let targetTodoItem = editTodoBtn.parentElement.parentElement.firstElementChild.firstElementChild;
+  editTaskId = editTodoBtn.parentElement.parentElement.id;
+  let todoInput = todoContent.querySelector('.task-input');
+  todoInput.firstElementChild.value = targetTodoItem.innerText;
+}
+
+function addEditTodo(){
+  let todoInput = todoContent.querySelector('.task-input');
+   let inputValue = todoInput.firstElementChild.value;
+   let todosDataLocal = getTodosDataLocalStorage();
+   if(editTaskId && inputValue.trim()){
+    let targetTaskLocal = todosDataLocal.find(todo => todo.id = editTaskId);
+    targetTaskLocal.title = inputValue.trim();
+    localStorage.setItem("todosData", JSON.stringify(todosDataLocal));
+    todoInput.firstElementChild.value = ""
+    editTaskId = 0;
+    showTodoList();
+   }
+   else{
+   if(inputValue.trim()){
+    let largestId = 0;
+    if(todosDataLocal?.length){
+      todosDataLocal.forEach(todo => {if(todo.id > largestId) largestId = todo.id});
+      let newTodo = {userId: 1, id: largestId,title: inputValue.trim(), completed: false}
+      localStorage.setItem("todosData", JSON.stringify([...todosDataLocal, newTodo]))
+    }
+    else{
+      let newTodo = {userId: 1, id: largestId,title: inputValue.trim(), completed: false};
+      localStorage.setItem("todosData", JSON.stringify([newTodo]));
+    }
+   }
+   todoInput.firstElementChild.value = ""
+   showTodoList();
+  }
+}
+
+function clearAll(){
+  const todosUl = todoContent.querySelector('.list-group');
+  todosUl.innerHTML = "";
+  localStorage.removeItem("todosData");
 }
 
 function setCookie(key, val) {
