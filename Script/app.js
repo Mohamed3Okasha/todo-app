@@ -133,8 +133,10 @@ function showTodoList(filterId){
   todosData.forEach(todo => {
     if(todo.completed){
       let todoItem = document.createElement("li");
-      todoItem.classList.add("list-group-item","text-decoration-line-through");
-      todoItem.innerHTML = `${todo.title} <input type="checkbox" checked>`;
+      todoItem.setAttribute("id", `${todo.id}`);
+      todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
+      todoItem.innerHTML = `<div><span class="text-decoration-line-through">${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox" checked></div> <div><button class="btn btn-dark btn-sm">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
+
       todosUl.append(todoItem);
     }
     })
@@ -144,8 +146,9 @@ function showTodoList(filterId){
       todosData.forEach(todo => {
         if(!todo.completed){
         let todoItem = document.createElement("li");
-        todoItem.classList.add("list-group-item");
-        todoItem.innerHTML = `${todo.title} <input type="checkbox">`;
+        todoItem.setAttribute("id", todo.id);
+        todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
+        todoItem.innerHTML = `<div><span>${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox"></div> <div><button class="btn btn-dark btn-sm">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
         todosUl.append(todoItem);
       }
       })
@@ -154,8 +157,9 @@ function showTodoList(filterId){
       todosUl.innerHTML="";
       todosData.forEach(todo => {
         let todoItem = document.createElement("li");
-        todoItem.classList.add("list-group-item", `${todo.completed && "text-decoration-line-through"}`);
-        todoItem.innerHTML = `${todo.title} <input type="checkbox" ${todo.completed?"checked":""}>`;
+        todoItem.setAttribute("id", todo.id);
+        todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
+        todoItem.innerHTML = `<div><span class=${todo.completed ? "text-decoration-line-through" : ""}>${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox" ${todo.completed?"checked":""}></div> <div><button class="btn btn-dark btn-sm">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
         todosUl.append(todoItem);
       })
     }
