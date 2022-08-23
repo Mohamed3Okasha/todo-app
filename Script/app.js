@@ -1,6 +1,9 @@
 const REQRES_BASE_URL = "https://reqres.in/api";
+const JSONPH_BASE_URL = "https://jsonplaceholder.typicode.com";
 const loginStatus = document.querySelector("#loginStatus");
-const modalCloseBtn = document.querySelector(".btn-close")
+const modalCloseBtn = document.querySelector(".btn-close");
+const todoContent = document.querySelector(".todo-content");
+const filters = document.querySelectorAll(".filters span");
 
 function handleRegisterationSubmit() {
   const form = document.forms;
@@ -19,6 +22,7 @@ function handleRegisterationSubmit() {
       .then((res) => {
         setCookie("email", emailInput.value);
         setCookie("token", res.data.token);
+        getTodosDataAPI(); //load todos upon successful registeration of the user
         changeLoginStatus(emailInput.value);
         modalCloseBtn.click();
       });
@@ -118,9 +122,47 @@ function changeLoginStatus(email){
   }
 })()
 
-function showTodoList(){
-  const todoContent = document.querySelector(".todo-content");
-  todoContent.innerHTML = `Here's your todo content`;
+function showTodoList(filterId){
+  // todoContent.innerHTML = `Here's your todo content`;
+  todoContent.querySelector("h3").classList.add("d-none");
+  todoContent.querySelector(".wrapper").classList.remove("d-none")
+  const todosData = getTodosDataLocalStorage();
+  const todosUl = todoContent.querySelector('.list-group');
+    if(filterId === "completed"){
+      todosUl.innerHTML="";
+  todosData.forEach(todo => {
+    if(todo.completed){
+      let todoItem = document.createElement("li");
+      todoItem.classList.add("list-group-item","text-decoration-line-through");
+      todoItem.innerHTML = `${todo.title} <input type="checkbox" checked>`;
+      todosUl.append(todoItem);
+    }
+    })
+    }
+    else if(filterId === "pending"){
+      todosUl.innerHTML="";
+      todosData.forEach(todo => {
+        if(!todo.completed){
+        let todoItem = document.createElement("li");
+        todoItem.classList.add("list-group-item");
+        todoItem.innerHTML = `${todo.title} <input type="checkbox">`;
+        todosUl.append(todoItem);
+      }
+      })
+    }
+    else{
+      todosUl.innerHTML="";
+      todosData.forEach(todo => {
+        let todoItem = document.createElement("li");
+        todoItem.classList.add("list-group-item", `${todo.completed && "text-decoration-line-through"}`);
+        todoItem.innerHTML = `${todo.title} <input type="checkbox" ${todo.completed?"checked":""}>`;
+        todosUl.append(todoItem);
+      })
+    }
+    
+    if(!filterId){
+      addFiltersEventListeners();
+    }
 }
 
 function removeTodoList(){
@@ -128,6 +170,25 @@ function removeTodoList(){
   todoContent.innerHTML = `<h3 class="mt-5">
   Welcome to ToDo App, Please login / register to access your ToDo List
   </h3>`;
+}
+
+function getTodosDataAPI(){
+  axios.get(`${JSONPH_BASE_URL}/todos`)
+  .then(res => {localStorage.setItem("todosData", JSON.stringify(res.data.filter(todo => todo.userId === 1)));})
+}
+
+function getTodosDataLocalStorage(){
+  return JSON.parse(localStorage.getItem("todosData"));
+}
+
+function addFiltersEventListeners(){
+  filters.forEach(filter => {
+    filter.addEventListener("click", () => {
+      document.querySelector("span.active").classList.remove("active");
+      filter.classList.add("active");
+      showTodoList(filter.id);
+    })
+  })
 }
 
 function setCookie(key, val) {
