@@ -195,6 +195,16 @@ function addFiltersEventListeners(){
   })
 }
 
+function toggleCheck(targetTaskInput){
+  let todosDataLocal = getTodosDataLocalStorage();
+  let targetTaskLocal = todosDataLocal.find(todo => todo.id === +targetTaskInput.id);
+  let targetTaskContent = targetTaskInput.parentElement.firstElementChild;
+  console.log('toggleCheck :', targetTaskLocal.completed);
+  targetTaskLocal.completed ? targetTaskContent.classList.remove("text-decoration-line-through") : targetTaskContent.classList.add("text-decoration-line-through");
+  targetTaskLocal.completed = ! targetTaskLocal.completed;
+  localStorage.setItem("todosData", JSON.stringify(todosDataLocal));
+}
+
 function setCookie(key, val) {
   document.cookie = `${key}=${val}`;
 }
