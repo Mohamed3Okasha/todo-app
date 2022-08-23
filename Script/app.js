@@ -129,8 +129,9 @@ function showTodoList(filterId){
   todoContent.querySelector(".wrapper").classList.remove("d-none")
   const todosData = getTodosDataLocalStorage();
   const todosUl = todoContent.querySelector('.list-group');
-    if(filterId === "completed"){
-      todosUl.innerHTML="";
+  if(todosData?.length){
+  if(filterId === "completed"){
+    todosUl.innerHTML="";
   todosData.forEach(todo => {
     if(todo.completed){
       let todoItem = document.createElement("li");
@@ -164,6 +165,8 @@ function showTodoList(filterId){
         todosUl.append(todoItem);
       })
     }
+
+  }
     
     if(!filterId){
       addFiltersEventListeners();
@@ -233,9 +236,15 @@ function addEditTodo(){
    else{
    if(inputValue.trim()){
     let largestId = 0;
-    todosDataLocal.forEach(todo => {if(todo.id > largestId) largestId = todo.id});
-    let newTodo = {userId: 1, id: largestId,title: inputValue.trim(), completed: false}
-    localStorage.setItem("todosData", JSON.stringify([...todosDataLocal, newTodo]))
+    if(todosDataLocal?.length){
+      todosDataLocal.forEach(todo => {if(todo.id > largestId) largestId = todo.id});
+      let newTodo = {userId: 1, id: largestId,title: inputValue.trim(), completed: false}
+      localStorage.setItem("todosData", JSON.stringify([...todosDataLocal, newTodo]))
+    }
+    else{
+      let newTodo = {userId: 1, id: largestId,title: inputValue.trim(), completed: false};
+      localStorage.setItem("todosData", JSON.stringify([newTodo]));
+    }
    }
    todoInput.firstElementChild.value = ""
    showTodoList();
