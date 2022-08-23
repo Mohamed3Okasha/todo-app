@@ -251,6 +251,12 @@ function addEditTodo(){
   }
 }
 
+function clearAll(){
+  const todosUl = todoContent.querySelector('.list-group');
+  todosUl.innerHTML = "";
+  localStorage.removeItem("todosData");
+}
+
 function setCookie(key, val) {
   document.cookie = `${key}=${val}`;
 }
