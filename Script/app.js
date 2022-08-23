@@ -4,6 +4,7 @@ const loginStatus = document.querySelector("#loginStatus");
 const modalCloseBtn = document.querySelector(".btn-close");
 const todoContent = document.querySelector(".todo-content");
 const filters = document.querySelectorAll(".filters span");
+let editTaskId = 0;
 
 function handleRegisterationSubmit() {
   const form = document.forms;
@@ -135,7 +136,7 @@ function showTodoList(filterId){
       let todoItem = document.createElement("li");
       todoItem.setAttribute("id", `${todo.id}`);
       todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
-      todoItem.innerHTML = `<div><span class="text-decoration-line-through">${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox" checked></div> <div><button class="btn btn-dark btn-sm">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
+      todoItem.innerHTML = `<div><span class="text-decoration-line-through">${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox" checked></div> <div><button class="btn btn-dark btn-sm" onclick="editTodo(this)">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
 
       todosUl.append(todoItem);
     }
@@ -148,7 +149,7 @@ function showTodoList(filterId){
         let todoItem = document.createElement("li");
         todoItem.setAttribute("id", todo.id);
         todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
-        todoItem.innerHTML = `<div><span>${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox"></div> <div><button class="btn btn-dark btn-sm">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
+        todoItem.innerHTML = `<div><span>${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox"></div> <div><button class="btn btn-dark btn-sm" onclick="editTodo(this)">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
         todosUl.append(todoItem);
       }
       })
@@ -159,7 +160,7 @@ function showTodoList(filterId){
         let todoItem = document.createElement("li");
         todoItem.setAttribute("id", todo.id);
         todoItem.classList.add("list-group-item", "d-flex", "justify-content-between");
-        todoItem.innerHTML = `<div><span class=${todo.completed ? "text-decoration-line-through" : ""}>${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox" ${todo.completed?"checked":""}></div> <div><button class="btn btn-dark btn-sm">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
+        todoItem.innerHTML = `<div><span class=${todo.completed ? "text-decoration-line-through" : ""}>${todo.title}</span> <input id=${todo.id} onclick="toggleCheck(this)" type="checkbox" ${todo.completed?"checked":""}></div> <div><button class="btn btn-dark btn-sm" onclick="editTodo(this)">Edit</button> <button class="btn btn-danger btn-sm" onclick="removeTodo(this)">Delete</button></div>`;
         todosUl.append(todoItem);
       })
     }
@@ -208,6 +209,37 @@ function removeTodo(removeTodo){
   let targetTodoItem = removeTodo.parentElement.parentElement;
   localStorage.setItem("todosData", JSON.stringify(getTodosDataLocalStorage().filter(todo => todo.id !== +targetTodoItem.id)))
   targetTodoItem.remove();
+}
+
+function editTodo(editTodoBtn){
+  let targetTodoItem = editTodoBtn.parentElement.parentElement.firstElementChild.firstElementChild;
+  editTaskId = editTodoBtn.parentElement.parentElement.id;
+  let todoInput = todoContent.querySelector('.task-input');
+  todoInput.firstElementChild.value = targetTodoItem.innerText;
+}
+
+function addEditTodo(){
+  let todoInput = todoContent.querySelector('.task-input');
+   let inputValue = todoInput.firstElementChild.value;
+   let todosDataLocal = getTodosDataLocalStorage();
+   if(editTaskId && inputValue.trim()){
+    let targetTaskLocal = todosDataLocal.find(todo => todo.id = editTaskId);
+    targetTaskLocal.title = inputValue.trim();
+    localStorage.setItem("todosData", JSON.stringify(todosDataLocal));
+    todoInput.firstElementChild.value = ""
+    editTaskId = 0;
+    showTodoList();
+   }
+   else{
+   if(inputValue.trim()){
+    let largestId = 0;
+    todosDataLocal.forEach(todo => {if(todo.id > largestId) largestId = todo.id});
+    let newTodo = {userId: 1, id: largestId,title: inputValue.trim(), completed: false}
+    localStorage.setItem("todosData", JSON.stringify([...todosDataLocal, newTodo]))
+   }
+   todoInput.firstElementChild.value = ""
+   showTodoList();
+  }
 }
 
 function setCookie(key, val) {
