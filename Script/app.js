@@ -167,9 +167,9 @@ function showTodoList(filterId){
 
 function removeTodoList(){
   const todoContent = document.querySelector(".todo-content");
-  todoContent.innerHTML = `<h3 class="mt-5">
-  Welcome to ToDo App, Please login / register to access your ToDo List
-  </h3>`;
+  todoContent.querySelector("h3").classList.remove("d-none");
+  todoContent.querySelector(".wrapper").classList.add("d-none");
+  todoContent.querySelector('.list-group').innerHTML = "";
 }
 
 function getTodosDataAPI(){
